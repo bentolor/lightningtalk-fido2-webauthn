@@ -1,0 +1,9 @@
+= LT-128: FIDO2 und WebAuthn: Passwortfreie Logins und 2FA für Alle!
+Benjamin Schmid <benjamin.schmid@exxcellent.de>
+
+== Abstract
+Bis heute sind statische Passwörter die Lingua Franca für die Authentifizierung im Web. Und das obwohl wir ihre Schwächen bezüglich einer einfachen und sicheren Verwendung im Kanon der regelmäßigen Leaks längst kennen. Der Wandel zur 2-Faktor Authentifizierung und dem völligen Ersatz von Passwörtern und Email als Authentifizierungsmerkmal drängt.
+
+Mit FIDO2 und dem dazugehörigen Webstandard WebAuthn ist das nun endlich möglich: Nutzer können sich nun vollständig ohne Passwörter an Webdiensten anmelden: Auf aktuellen Android und Windows 10 genügt dank WebAuthn in Webanwendung ein kurzer Fingerprint um sich passwortlos oder gesichert durch einen zweiten Faktor sicher und komfortabel anmelden zu können. Von Woche zu Woche unterstützen mehr und mehr Dienste wie Microsoft, Github und Co. diese neuen Möglichkeit.
+
+Ich zeige in dieser Session, was sich hinter FIDO2 und WebAuthn verbirgt, warum die beiden Standards wirklich das Potential haben, im Jahr 2020 endlich Passwörter praxistauglich und komfortabel ersetzen zu können. Daneben erfahren wir auch, wie wir diese in eigenen Java-basierten Webanwendungen schon heute einfach zum Einsatz bringen können.

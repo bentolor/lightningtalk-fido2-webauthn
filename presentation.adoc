@@ -1,0 +1,258 @@
+= FIDO2 & WebAuthn: Passwordless Logins and 2FA
+:author: Benjamin Schmid, @bentolor
+:date: 2020-07-24
+:icons: font
+// we want local served fonts. Therefore patched sky.css
+//:revealjs_theme: sky
+:revealjs_customtheme: reveal.js/css/theme/sky.css
+:revealjs_autoSlide: 0
+:revealjs_history: true
+:revealjs_fragmentInURL: true
+:revealjs_viewDistance: 5
+:revealjs_width: 1408
+:revealjs_height: 792
+:revealjs_controls: false
+:revealjs_controlsLayout: edges
+:revealjs_slideNumber: c/t
+:revealjs_center: false
+:revealjs_showSlideNumber: speaker
+:revealjs_autoPlayMedia: true
+:revealjs_defaultTiming: 42
+//:revealjs_transitionSpeed: fast
+:revealjs_parallaxBackgroundImage: images/old-door.jpg
+:revealjs_parallaxBackgroundSize: 2077px 1362px
+:customcss: css/presentation.css
+:imagesdir: images
+:source-highlighter: highlightjs
+:highlightjs-theme: css/atom-one-light.css
+// we want local served font-awesome fonts
+//:iconfont-remote!:
+//:iconfont-name: fonts/fontawesome/css/all
+
+[%notitle,background-image="lt-start.jpg"]
+== Title screen
+
+== Passwords are beyond repair!
+
+[.center.col2.fragment]
+****
+icon:hdd-o[role="superlarge"] +
+Retention
+****
+
+[.center.col2.fragment]
+****
+icon:puzzle-piece[role="superlarge"] +
+Complexity +
+{nbsp} +
+****
+
+[.center.col2.fragment]
+****
+icon:recycle[role="superlarge"] +
+Reuse +
+{nbsp} +
+****
+
+[.center.col2.fragment]
+****
+icon:shield[role="superlarge"] +
+Stealing & Phishing
+****
+
+[%notitle,background-image="pwned.png",background-size="scale"]
+=== Phishing & HaveIbeenpwned
+
+
+[%notitle.lightbg,background-image="https://raw.githubusercontent.com/dumb-password-rules/dumb-password-rules/master/screenshots/CanadaRevenueAgency.png"]
+=== Password Mems
+_Password Memes:_ Length restrictions, Weird complexity rules, Expiration
+
+=== 2-Factor / MFA for the rescue?
+
+Grant access only after presenting 2+ pieces of evidence out of:  +
+**knowledge**, **possession** or **inherence**.
+
+[.tgap.fragment]
+--
+* _One-time passwords:_ Mobile App, SMS, Email
+* _Tokens:_ OTP Token, Security Key
+* _Biometrics:_ Fingerprint, Iris
+--
+
+[.tgap.fragment]
+--
+**Issues:** UX, Privacy, Phishing, Costs, Portability
+--
+
+[.lightbg,background-video="videos/peace.mp4",background-video-loop="true",background-opacity="0.7"]
+== FIDO2 & Webauthn
+
+[%notitle,background-video="videos/passwordless-login-fido2.mp4",background-size="contain"]
+=== A world w/o passwords!
+
+
+// Screencast: Android Firefox Login into Nextcloud using FIDO2/Webautn 
+// and Fingerprint/TPM authenticator
+
+
+
+// U2F = Universal Scond Factor
+
+[%notitle,background-image="process.png",background-size="contain"]
+=== Process
+//image::process.png[width="90%"]
+
+//. **Relying Party** (Server) → sends Credential identifier & Challenge
+//. **Client**: attaches Origins; forwards to Authenticator
+//. **Authenticator**: check for user presence; signs payload
+
+=== Solving the confusion
+[cols=">1s,4"]
+|===
+| FIDO  | FIDO Alliance; author of protocols UAF, U2F, FIDO2
+| FIDO2 | Joint Project by FIDO Alliance & W3C. +
+           Bascially: **WebAuthn + CTAP**
+| WebAuthn | Browser JS API to talk to _Authenticators_  +
+             and manage _Credentials_
+| CTAP  |  Client to Authenticator Protocol +
+          _CTAP1: U2F, CTAP2: FIDO2_
+|===
+
+
+=== Authenticator Types
+
+Platform (TPM)::
+    Verification via Biometrics: icon:hand-o-up[] Fingerprint, icon:eye[] Iris, …  +
+    Platforms: icon:android[] Android,  icon:windows[] Windows 10
+
+Portable: Security Keys (USB, NFC, Bluetooth):: 
+    Verification via Presence +
+    Platforms: all icon:android[] icon:windows[]  icon:apple[]
+    
+
+[%notitle,background-video="videos/security-key-login.mp4",background-size="contain"]
+=== FIDO2 w/ security key
+
+
+
+
+=== Example client code
+
+[source,javascript]
+----
+const credentialCreationOpts = {
+    challenge: Uint8Array.from( serverRandomValue, c => c.charCodeAt(0)),
+    rp: { name: "eXXcellent solutions Web", id: "exxcellent.de" },
+    user: {
+        id: Uint8Array.from("EXXL85T9AFC", c => c.charCodeAt(0)),
+        name: "alice@exxcellent.de",
+        displayName: "Alice Lee",
+    },
+    pubKeyCredParams: [{alg: -7, type: "public-key"}],
+    timeout: 60000
+};
+
+const credential = await navigator.credentials.create(
+     { publicKey: credentialCreationOpts }
+);
+----
+
+[.x-small]
+== FIDO2/WebAuthn Scenarios
+
+[.fragment.left]
+--
+Convenient & Secure 2FA::
+Just use WebAuthn to register/verify an additional credential. _No more OTPs – Yeah!_
+--
+
+[.fragment.left]
+--
+Passwordless Logins (no MFA):: Just use WebAuthn _instead_ of passwords
+--
+
+[.fragment.left]
+--
+Passwordless Logins (with 2FA):: Request _User Verification (UV)_ from Authenticator → Additional PIN, Biometrics, …
+--
+
+[.fragment.left]
+--
+"I'm a bank!":: Trusting for only selected authenticators? → request device attestation
+--
+
+[.fragment.left]
+--
+"What is my username?":: Use _Resident Credentials (RK)_: Can be acquired without Credential ID.  + 
+_But:_ 1. Incomplete browser support 2. UV must be setup 3. Limited storage
+--
+
+[%notitle,background-image="webauthn.io.png"]
+=== Demo: webauthn.io
+
+== FIDO2, WebAuthn & Java
+
+`webauthn4j`:: A portable Java library for WebAuthn server side verification
+
+`webauthn4j/webauthn4j-spring-security`:: Spring Boot / Angular sample application
+
+Keycloak 8.0+:: Built-in support using `webauthn4j`
+
+
+[.decentlightbg]
+== Resources
+
+[.x-small.col2]
+****
+.Introductions
+* FIDO2 Developer Primer: https://webauthn.guide/[`webauthn.guide`]
+* FIDO2 Demo: https://webauthn.io/[`webauthn.io`]
+
+.In-depth materials
+* Links: https://github.com/herrjemand/awesome-webauthn[`github.com/herrjemand/awesome-webauthn`]
+* Articles: https://medium.com/@herrjemand/[`medium.com/@herrjemand/`]
+
+.Standard Hardware Security Keys
+$20-$35 Open-source key: https://solokeys.com/[Solo Keys] +
+image:solokey.png[height="60px"] image:somu.png[height="60px"]
+
+Indestructible, #1 brand, $20-$70: https://www.yubico.com/[Yubico] +
+  image:yubisk.png[height="60px"] image:yubikey.png[height="60px"]
+
+****
+
+[.x-small.col2.bgap]
+****
+.Special Hardware Keys
+Biometrics (no PIN for UV!): image:ezfigner2.png[height="80px"] image:https://ftsafe.co.jp/wp/wp-content/themes/ftsafePCSP2016/img/1_07.png[height="80px"] 
+
+Wearables: image:motivring.png[height="80px"] 
+
+.Software-only Key (Android)
+https://www.wiokey.de/de/[wiokey.de (Free)]  
+// image:https://www.wiokey.de/wp-content/uploads/2020/06/Google-Pixel-4-4-XL-1280x2286.png[height="120px"]
+****
+
+
+[%notitle,background-image="lt-end.jpg"]
+== End screen
+
+
+[pass]
+++++
+<script src="./live.js"></script>
+
+<!-- hide "verbatim" sections if URL contains "terse"-Keyword -->
+<script>
+    if (!window.location.search.match(/bonus/gi)) {
+        var sections = document.getElementsByTagName('section');
+        for (var i = sections.length-1; i > -1; --i) {
+            console.log(sections[i].classList);
+            if (sections[i].classList.contains("bonuscontent")) {
+                sections[i].remove();
+            }
+        }
+    }
+</script>
+++++
