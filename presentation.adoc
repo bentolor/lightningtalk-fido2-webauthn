@@ -29,9 +29,6 @@
 //:iconfont-remote!:
 //:iconfont-name: fonts/fontawesome/css/all
 
-[%notitle,background-image="lt-start.jpg"]
-== Title screen
-
 == Passwords are beyond repair!
 
 [.center.col2.fragment]
@@ -233,10 +230,6 @@ Wearables: image:motivring.png[height="80px"]
 https://www.wiokey.de/de/[wiokey.de (Free)]  
 // image:https://www.wiokey.de/wp-content/uploads/2020/06/Google-Pixel-4-4-XL-1280x2286.png[height="120px"]
 ****
-
-
-[%notitle,background-image="lt-end.jpg"]
-== End screen
 
 
 [pass]
